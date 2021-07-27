@@ -1,0 +1,25 @@
+Session timeout not 
+implementedSession timeout not fully 
+functionalLogout not implemented 
+Logout not fully 
+functionalLogout only performed on client 
+sideAccess-ControlAuthorization bypass for non-www 
+filesAuthorization bypass for web 
+functionalityAuthorization bypass for example 
+pagesAuthorization bypass for test 
+pagesAuthorization bypass for status 
+pagesAuthorization bypass for help 
+pagesAuthorization only proofed on 
+clientInsecure direct object 
+referencesPrivilege escalation 
+possibleCross-site request forgery prevention not 
+implementedCross-site request forgery prevention not fully 
+functionalCross-site request forgery prevention 
+improvableSSL 
+configurationEncrypted connection (TLS) not 
+availableEncrypted connection (TLS) not 
+enforcedEncrypted connection (TLS) incontinently 
+usedEncrypted content can be 
+cachedSSL certificate 
+self-signedSSL certificate not public 
+trustedSSL certificate expired 

@@ -1,0 +1,48 @@
+# LXD profile to enable graphics support (with accelleration) for Kali containers
+#
+# Assumes we have an NVidia GPU, and run Ubuntu. 
+# 
+# Source: https://blog.simos.info/how-to-run-graphics-x11-applications-in-the-kali-lxd-container/
+# Source: https://blog.simos.info/wp-content/uploads/2020/11/x11kali.txt
+
+config:
+  environment.DISPLAY: :0
+  environment.PULSE_SERVER: unix:/tmp/pulse-native
+  nvidia.driver.capabilities: all
+  nvidia.runtime: "true"
+  user.user-data: |
+    #cloud-config
+    runcmd:
+      - sed -i 's/; enable-shm = yes/enable-shm = no/g' /etc/pulse/client.conf
+      - sed -i '$ a\DISPLAY=:0' /root/.bashrc
+      - sed -i '$ a\DISPLAY=:0' /home/debian/.bashrc
+      - sed -i '$ a\PULSE_SERVER=unix:/tmp/pulse-native' /home/debian/.bashrc
+      - sed -i '$ a\PULSE_SERVER=unix:/tmp/pulse-native' /root/.bashrc
+    packages:
+      - x11-apps
+      - mesa-utils
+      - pulseaudio
+description: GUI LXD profile
+devices:
+  PASocket1:
+    bind: container
+    connect: unix:/tmp/user/1000/pulse/native
+    gid: "1000"
+    listen: unix:/tmp/pulse-native
+    mode: "0777"
+    security.gid: "1000"
+    security.uid: "1000"
+    type: proxy
+    uid: "1000"
+  X0:
+    bind: container
+    connect: unix:@/tmp/.X11-unix/X1
+    listen: unix:@/tmp/.X11-unix/X0
+    security.gid: "1000"
+    security.uid: "1000"
+    type: proxy
+  mygpu:
+    type: gpu
+name: x11kali
+used_by: []
+
