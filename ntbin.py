@@ -11,7 +11,7 @@
 #- package and structure with package imports etc
 #- tagging implementation soon
 #- rather json db, mongo?
-#
+#- file change etc
 #
 #### hostbusters.dev ##### call at #####
 
@@ -26,7 +26,7 @@ import pycld2 as cld2
 conn = sqlite3.connect('notebin.db', check_same_thread=False)
 
 # todo from db
-supportedLangs = {"GERMAN": "de_DE","de_DE": "de_core_news_sm",}
+supportedLangs = {"GERMAN": "de_DE", "de_DE": "de_core_news_sm", "ENGLISH": "en_core_web_sm"}
 
 
  
@@ -91,6 +91,7 @@ class Handler(FileSystemEventHandler):
                 dbEntry = conn.execute("SELECT fileName FROM fileIndex WHERE fileID = ( select max(fileID) from fileIndex );")
                 print(dbEntry)
                 conn.commit()
+## check if lang and which
                 if m in ("application/json", "text/plain"): # reads mime
                     print("Detected %s encoding for reading index", m)
                     method = open
@@ -108,13 +109,16 @@ class Handler(FileSystemEventHandler):
 
                     if isLang is True:
                         if detectedLang in supportedLangs:
-                            
+                            print(detectedLang)
+                            ## analyze the text
                             nlp = spacy.load(supportedLangs[detectedLang]) # spacy load detected lang file 
                             doc = nlp(open(f, "r+").read()) #sends file to nlp engine
-
-                            for token in doc:
-                                print(token.text, token.lemma_, token.pos_, token.tag_, token.dep_,
-                                        token.shape_, token.is_alpha, token.is_stop)
+                            from spacy import displacy
+                            
+                            entities=[(i, i.label_, i.label) for i in doc.ents]
+                            print(entities)
+                            tokens=[(token.text, token.lemma_, token.pos_, token.tag_, token.dep_, token.shape_, token.is_alpha, token.is_stop) for token in doc]
+                            print(tokens)
                             return(method)
                         else:
                             print("not a yet supported language (",supportedLangs.keys(),")")
